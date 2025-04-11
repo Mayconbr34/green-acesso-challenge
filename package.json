@@ -1,0 +1,54 @@
+{
+  "name": "green-acesso-challenge",
+  "version": "1.0.0",
+  "description": "Desafio técnico para a vaga de desenvolvedor backend na Green Acesso",
+  "homepage": "https://github.com/Mayconbr34/green-acesso-challenge#readme",
+  "bugs": {
+    "url": "https://github.com/Mayconbr34/green-acesso-challenge/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Mayconbr34/green-acesso-challenge.git"
+  },
+  "main": "src/index.js",
+  "scripts": {
+    "start": "node src/index.js",
+    "dev": "nodemon src/index.js",
+    "test": "jest"
+  },
+  "keywords": [
+    "nodejs",
+    "express",
+    "sequelize",
+    "backend",
+    "csv",
+    "pdf"
+  ],
+  "author": "Maycon Brian da Silva Ferreira",
+  "license": "MIT",
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "cors": "^2.8.5",
+    "csv-parser": "^3.0.0",
+    "dotenv": "^16.5.0",
+    "express": "^4.18.2",
+    "express-async-errors": "^3.1.1",
+    "express-validator": "^7.0.1",
+    "helmet": "^7.1.0",
+    "jsonwebtoken": "^9.0.2",
+    "morgan": "^1.10.0",
+    "multer": "^1.4.5-lts.1",
+    "mysql2": "^3.6.5",
+    "pdf-lib": "^1.17.1",
+    "pdf-parse": "^1.1.1",
+    "pdfkit": "^0.14.0",
+    "sequelize": "^6.35.1",
+    "winston": "^3.11.0"
+  },
+  "devDependencies": {
+    "jest": "^29.7.0",
+    "nodemon": "^3.0.2",
+    "sequelize-cli": "^6.6.2",
+    "supertest": "^6.3.3"
+  }
+}

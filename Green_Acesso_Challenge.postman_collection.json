@@ -1,0 +1,803 @@
+{
+	"info": {
+		"_postman_id": "a1b2c3d4-e5f6-g7h8-i9j0-k1l2m3n4o5p6",
+		"name": "Green Acesso Challenge",
+		"description": "Coleção para testar a API do desafio técnico da Green Acesso",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Autenticação",
+			"item": [
+				{
+					"name": "Login",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);",
+									"",
+									"if (jsonData && jsonData.token) {",
+									"    pm.environment.set(\"token\", jsonData.token);",
+									"    pm.environment.set(\"userId\", jsonData.user.id);",
+									"    pm.test(\"Token armazenado no ambiente\", function() {",
+									"        pm.expect(pm.environment.get(\"token\")).to.not.be.undefined;",
+									"    });",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"admin@greenacesso.com\",\n    \"senha\": \"senha123\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/auth/login",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"auth",
+								"login"
+							]
+						},
+						"description": "Autenticar usuário e obter token JWT"
+					},
+					"response": []
+				},
+				{
+					"name": "Obter Perfil",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/auth/me",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"auth",
+								"me"
+							]
+						},
+						"description": "Obter informações do usuário autenticado"
+					},
+					"response": []
+				},
+				{
+					"name": "Registrar Usuário",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"nome\": \"Novo Usuário\",\n    \"email\": \"usuario@example.com\",\n    \"senha\": \"senha123\",\n    \"role\": \"user\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/auth/register",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"auth",
+								"register"
+							]
+						},
+						"description": "Registrar um novo usuário (requer permissão de admin)"
+					},
+					"response": []
+				}
+			],
+			"description": "Endpoints para autenticação e gerenciamento de usuários"
+		},
+		{
+			"name": "Boletos",
+			"item": [
+				{
+					"name": "Listar Boletos",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/boletos",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"boletos"
+							],
+							"query": [
+								{
+									"key": "nome",
+									"value": "JOSE",
+									"description": "Filtrar por nome do sacado",
+									"disabled": true
+								},
+								{
+									"key": "id_lote",
+									"value": "1",
+									"description": "Filtrar por ID do lote",
+									"disabled": true
+								},
+								{
+									"key": "valor_inicial",
+									"value": "100",
+									"description": "Valor mínimo",
+									"disabled": true
+								},
+								{
+									"key": "valor_final",
+									"value": "200",
+									"description": "Valor máximo",
+									"disabled": true
+								},
+								{
+									"key": "relatorio",
+									"value": "1",
+									"description": "Gerar relatório em PDF",
+									"disabled": true
+								}
+							]
+						},
+						"description": "Listar todos os boletos com opção de filtros"
+					},
+					"response": []
+				},
+				{
+					"name": "Obter Boleto",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/boletos/1",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"boletos",
+								"1"
+							]
+						},
+						"description": "Obter detalhes de um boleto específico pelo ID"
+					},
+					"response": []
+				},
+				{
+					"name": "Baixar PDF do Boleto",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/boletos/1/pdf",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"boletos",
+								"1",
+								"pdf"
+							]
+						},
+						"description": "Baixar o PDF de um boleto específico"
+					},
+					"response": []
+				},
+				{
+					"name": "Importar CSV",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "arquivo",
+									"type": "file",
+									"src": "/path/to/your/file.csv"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/boletos/importar-csv",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"boletos",
+								"importar-csv"
+							]
+						},
+						"description": "Importar boletos de um arquivo CSV"
+					},
+					"response": []
+				},
+				{
+					"name": "Processar PDF",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "arquivo",
+									"type": "file",
+									"src": "/path/to/your/file.pdf"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/boletos/processar-pdf",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"boletos",
+								"processar-pdf"
+							]
+						},
+						"description": "Processar um arquivo PDF de boletos"
+					},
+					"response": []
+				},
+				{
+					"name": "Criar PDF Exemplo",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/boletos/criar-pdf-exemplo",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"boletos",
+								"criar-pdf-exemplo"
+							]
+						},
+						"description": "Criar um PDF de exemplo para testes"
+					},
+					"response": []
+				},
+				{
+					"name": "Atualizar Boleto",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"nome_sacado\": \"JOSE DA SILVA ATUALIZADO\",\n    \"valor\": 190.50,\n    \"linha_digitavel\": \"123456123456123456\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/boletos/1",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"boletos",
+								"1"
+							]
+						},
+						"description": "Atualizar informações de um boleto"
+					},
+					"response": []
+				},
+				{
+					"name": "Remover Boleto",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/boletos/1",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"boletos",
+								"1"
+							]
+						},
+						"description": "Remover (desativar) um boleto"
+					},
+					"response": []
+				},
+				{
+					"name": "Estatísticas",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/boletos/estatisticas",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"boletos",
+								"estatisticas"
+							]
+						},
+						"description": "Obter estatísticas dos boletos"
+					},
+					"response": []
+				}
+			],
+			"description": "Endpoints para gerenciamento de boletos"
+		},
+		{
+			"name": "Lotes",
+			"item": [
+				{
+					"name": "Listar Lotes",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/lotes",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"lotes"
+							]
+						},
+						"description": "Listar todos os lotes"
+					},
+					"response": []
+				},
+				{
+					"name": "Criar Lote",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"nome\": \"0020\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/lotes",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"lotes"
+							]
+						},
+						"description": "Criar um novo lote"
+					},
+					"response": []
+				},
+				{
+					"name": "Atualizar Lote",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"nome\": \"0022\",\n    \"ativo\": true\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/lotes/1",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"lotes",
+								"1"
+							]
+						},
+						"description": "Atualizar informações de um lote"
+					},
+					"response": []
+				},
+				{
+					"name": "Remover Lote",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/lotes/1",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"lotes",
+								"1"
+							]
+						},
+						"description": "Remover (desativar) um lote"
+					},
+					"response": []
+				},
+				{
+					"name": "Listar Mapeamentos",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/lotes/mapeamentos",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"lotes",
+								"mapeamentos"
+							]
+						},
+						"description": "Listar mapeamentos entre unidades externas e lotes internos"
+					},
+					"response": []
+				},
+				{
+					"name": "Criar Mapeamento",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"nome_externo\": \"20\",\n    \"id_lote_interno\": 4\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/lotes/mapeamentos",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"lotes",
+								"mapeamentos"
+							]
+						},
+						"description": "Criar um novo mapeamento"
+					},
+					"response": []
+				},
+				{
+					"name": "Atualizar Mapeamento",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"nome_externo\": \"21\",\n    \"id_lote_interno\": 2\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/lotes/mapeamentos/1",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"lotes",
+								"mapeamentos",
+								"1"
+							]
+						},
+						"description": "Atualizar um mapeamento existente"
+					},
+					"response": []
+				},
+				{
+					"name": "Remover Mapeamento",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/lotes/mapeamentos/1",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"lotes",
+								"mapeamentos",
+								"1"
+							]
+						},
+						"description": "Remover um mapeamento"
+					},
+					"response": []
+				}
+			],
+			"description": "Endpoints para gerenciamento de lotes e mapeamentos"
+		},
+		{
+			"name": "API Status",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/api/status",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"api",
+						"status"
+					]
+				},
+				"description": "Verificar status da API"
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "http://localhost:3000",
+			"type": "string"
+		},
+		{
+			"key": "token",
+			"value": "token_de_autenticacao",
+			"type": "string"
+		}
+	]
+}
